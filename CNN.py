@@ -57,7 +57,12 @@ cnn.add(tf.keras.layers.Flatten())
 # Fully connected
 cnn.add(tf.keras.layers.Dense(256, activation='relu'))
 
-# Dropout (prevents overfitting)
+# Dropout
+# During training, 50% of the neurons in that layer are randomly turned off
+# Each batch uses a different random 50%
+# This prevents the network from becoming too dependent on specific neurons
+# It forces the model to learn more general patterns
+# Reduces overfitting
 cnn.add(tf.keras.layers.Dropout(0.5))
 
 # Output layer
