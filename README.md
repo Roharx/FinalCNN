@@ -31,6 +31,8 @@ Folder layout should look like this:
 pythonProject/
 │
 ├── CNN.py
+├── predict.py
+├── cat_dog_model.py
 ├── README.md
 │
 ├── training_set/
@@ -44,6 +46,12 @@ pythonProject/
 └── single_prediction/
     └── prediction.png
 ```
+
+Make sure if you use the predict.py after training to adjust the name of the
+file it reads out of to match the file name in the CNN.py.
+
+The predict.py is not part of the submission, it is just there for my own convenience.
+For this reason I will only update it to match my own file system that is excluded via .gitingore.
 
 ---
 
