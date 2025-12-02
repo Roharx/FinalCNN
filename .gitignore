@@ -2,3 +2,5 @@
 training_set/
 test_set/
 single_prediction/
+cat_dog_model_2.h5
+cat_dog_model.h5

@@ -17,7 +17,7 @@ training_datagen = ImageDataGenerator(
 # Import training set
 training_set = training_datagen.flow_from_directory(
     './training_set',
-    target_size = (64, 64), # Final size of the images when they will be fitted into the CNN
+    target_size = (150, 150), # Final size of the images when they will be fitted into the CNN
     batch_size = 32, # How many images do we want in each batch, 32 is a classic default value
     class_mode = 'binary' # Binary or categorical, in this case, we want to choose between cat or dog so binary
 )
@@ -26,7 +26,7 @@ training_set = training_datagen.flow_from_directory(
 test_datagen = ImageDataGenerator(rescale=1./255)
 test_set = test_datagen.flow_from_directory(
     './test_set',
-    target_size = (64, 64),
+    target_size = (150, 150),
     batch_size = 32,
     class_mode = 'binary'
 )
@@ -36,45 +36,32 @@ test_set = test_datagen.flow_from_directory(
 # ------------------------------------------------------------------------------------------------------------------
 cnn = tf.keras.models.Sequential()
 
-# Convolution
-cnn.add(tf.keras.layers.Conv2D(
-    filters = 32,
-    kernel_size = (3, 3),
-    activation = 'relu',
-    input_shape = [64, 64, 3]
-))
+# 1st convolution layer
+cnn.add(tf.keras.layers.Conv2D(32, (3,3), activation='relu', input_shape=(150,150,3)))
 
-# Pooling (max)
-cnn.add(tf.keras.layers.MaxPool2D(
-    pool_size = 2,
-    strides = 2
-))
+# 2nd layer
+cnn.add(tf.keras.layers.Conv2D(64, (3,3), activation='relu'))
+cnn.add(tf.keras.layers.MaxPool2D(2,2))
 
-# 2nd convolution layer
-cnn.add(tf.keras.layers.Conv2D(
-    filters = 32,
-    kernel_size = (3, 3),
-    activation = 'relu'
-))
-cnn.add(tf.keras.layers.MaxPool2D(
-    pool_size = 2,
-    strides = 2
-))
+# 3rd layer
+cnn.add(tf.keras.layers.Conv2D(128, (3,3), activation='relu'))
+cnn.add(tf.keras.layers.MaxPool2D(2,2))
 
-# Flattening
+# 4th layer
+cnn.add(tf.keras.layers.Conv2D(256, (3,3), activation='relu'))
+cnn.add(tf.keras.layers.MaxPool2D(2,2))
+
+# Flatten
 cnn.add(tf.keras.layers.Flatten())
 
-# Full connection
-cnn.add(tf.keras.layers.Dense(
-    units = 128,
-    activation = 'relu',
-))
+# Fully connected
+cnn.add(tf.keras.layers.Dense(256, activation='relu'))
+
+# Dropout (prevents overfitting)
+cnn.add(tf.keras.layers.Dropout(0.5))
 
 # Output layer
-cnn.add(tf.keras.layers.Dense(
-    units = 1,
-    activation = 'sigmoid' # Because binary classification, for multi-class classification softmax
-))
+cnn.add(tf.keras.layers.Dense(1, activation='sigmoid'))
 
 # ------------------------------------------------------------------------------------------------------------------
 # Train CNN
@@ -92,6 +79,9 @@ cnn.fit(
     validation_data = test_set,
     epochs = 25
 )
+
+# Save the model
+cnn.save("cat_dog_model.h5")
 
 # ------------------------------------------------------------------------------------------------------------------
 # Predict
