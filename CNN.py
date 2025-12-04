@@ -93,7 +93,7 @@ cnn.save("cat_dog_model.h5")
 # ------------------------------------------------------------------------------------------------------------------
 test_image = image.load_img(
     './single_prediction/prediction.png',
-    target_size = (64, 64)
+    target_size = (150, 150)
 )
 test_image = image.img_to_array(test_image)
 test_image = np.expand_dims(test_image, axis = 0)
